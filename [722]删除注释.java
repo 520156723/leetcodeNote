@@ -115,3 +115,35 @@ class Solution {
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
+// 另一种写法
+public static String removeComments(String s) {
+        StringBuilder sb = new StringBuilder(s).append("\n");
+        int i = 0;
+        while (i < sb.length()){
+            // 注释都以/开头
+            int j = sb.indexOf("/", i);
+            if(j == -1){
+                // 没遇到注释起始符号退出
+                break;
+            }
+            char c = sb.charAt(j + 1);
+            if(c == '/'){
+                // 行注释
+                // 删除j位置到\n前的字符串，\n保留不删
+                sb.delete(j, sb.indexOf("\n", j + 2));//sb最后一定要加\n不然这里是-1越界
+                // 从j位置开始下一次遍历
+                i = j;
+            }else if(c == '*'){
+                // 块注释
+                // 删除j位置到*/的字符串，包括*/
+                sb.delete(j, sb.indexOf("*/", j + 2) + 2);
+                // 从j位置开始下一次遍历
+                i = j;
+            }else {
+                // 跳过以/开头但是不是注释的情况
+                // 例如：abc/def，应该从e字符开始下次遍历
+                i = j + 2;
+            }
+        }
+        return sb.toString();
+    }
